@@ -20,14 +20,74 @@ const { NotImplementedError } = require('../lib');
  *
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  constructor(isDirect) {
+    if (isDirect === false) {
+      this.isDirect = false;
+    } else {
+      this.isDirect = true;
+    }
   }
-
-  decrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  encrypt(str, key) {
+    if (!str || !key) {
+      throw new Error("Incorrect arguments!");
+    }
+    const arr1 = str.split("").map((el) => el.toUpperCase().charCodeAt(0));
+    const arr2 = key.split("").map((el) => el.toUpperCase().charCodeAt(0));
+    const longArr2 = [];
+    for (let i = 0; longArr2.length < arr1.length; i++) {
+      if (i === arr2.length) {
+        i = 0;
+      }
+      longArr2.push(arr2[i]);
+    }
+    const arrRes = [];
+    let j = 0;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] > 64 && arr1[i] < 91) {
+        arrRes.push(((arr1[i] + longArr2[j] - 130) % 26) + 65);
+        j++;
+      } else {
+        arrRes.push(arr1[i]);
+      }
+    }
+    const res = arrRes.map((el) => String.fromCharCode(el)).join("");
+    if (this.isDirect) {
+      return res;
+    } else {
+      return res.split("").reverse().join("");
+    }
+  }
+  decrypt(str, key) {
+    if (!str || !key) {
+      throw new Error("Incorrect arguments!");
+    }
+    const arr1 = str.split("").map((el) => el.toUpperCase().charCodeAt(0));
+    const arr2 = key.split("").map((el) => el.toUpperCase().charCodeAt(0));
+    const longArr2 = [];
+    for (let i = 0; longArr2.length < arr1.length; i++) {
+      if (i === arr2.length) {
+        i = 0;
+      }
+      longArr2.push(arr2[i]);
+    }
+    const arrRes = [];
+    let j = 0;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] > 64 && arr1[i] < 91) {
+        let a = (arr1[i] - longArr2[j]) % 26;
+        if (a < 0) a = a + 26;
+        arrRes.push(a + 65);
+        j++;
+      } else {
+        arrRes.push(arr1[i]);
+      }
+    }
+    const res = arrRes.map((el) => String.fromCharCode(el)).join("");
+    if (this.isDirect) {
+      return res;
+    } else {
+      return res.split("").reverse().join("");
+    }
   }
 }
 
